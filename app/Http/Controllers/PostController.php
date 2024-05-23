@@ -8,6 +8,26 @@ use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
+
+
+    public function show(Post $post)
+    {
+        $post->load('comments.user');
+        $category = $post->category;
+        $relatedPosts = Post::where('category_id', $post->category_id)
+            ->where('id', '!=', $post->id)
+            ->take(10)
+            ->get();
+
+        $breadcrumbs = [
+            ['name' => 'Home', 'url' => route('home')],
+            ['name' => $category->name, 'url' => route('posts.index', ['category' => $category->id])],
+            ['name' => $post->title, 'url' => ''],
+        ];
+
+        return view('posts.show', compact('post', 'breadcrumbs', 'relatedPosts'));
+    }
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -28,6 +48,9 @@ class PostController extends Controller
         if ($request->has('title')) {
             $query->where('title', 'like', '%' . $request->input('title') . '%');
         }
+
+        // Order by created_at in descending order (newest first)
+        $query->orderBy('created_at', 'desc');
 
         // Get the filtered and paginated list of posts
         $posts = $query->paginate(10); // 10 posts per page
@@ -63,6 +86,9 @@ class PostController extends Controller
             });
         }
 
+        // Order by created_at in descending order (newest first)
+        $query->orderBy('created_at', 'desc');
+
         // Get the filtered and paginated list of posts
         $posts = $query->paginate(10); // 10 posts per page
 
@@ -72,6 +98,7 @@ class PostController extends Controller
         // Return the 'posts.index' view with the filtered posts and categories
         return view('posts.index', compact('posts', 'categories'));
     }
+
     public function create()
     {
         $categories = Category::all();
@@ -98,29 +125,13 @@ class PostController extends Controller
 
         $post->save();
 
-        return redirect()->route('posts.index')->with('success', 'Post created successfully.');
+        return redirect()->route('posts.index')->with('success', 'Tạo bài viết thành công.');
     }
 
-
-    public function show(Post $post)
-    {
-
-        $post->load('comments.user');
-        $category = $post->category;
-
-        // Initialize breadcrumbs array
-        $breadcrumbs = [
-            ['name' => 'Home', 'url' => route('posts.index')],
-            ['name' => $category->name, 'url' => route('posts.index', ['category' => $category->id])],
-            ['name' => $post->title, 'url' => ''], // Current page (no URL needed)
-        ];
-        return view('posts.show', compact('post', 'breadcrumbs'));
-
-    }
 
     public function edit(Post $post)
     {
-        if (Auth::id() !== $post->user_id && !Auth::user()->is_admin) {
+        if (Auth::id() !== $post->user_id && !Auth::user()->role === 'admin') {
             return redirect()->route('posts.index')->with('error', 'Unauthorized action.');
         }
 
@@ -130,7 +141,7 @@ class PostController extends Controller
 
     public function update(Request $request, Post $post)
     {
-        if (Auth::id() !== $post->user_id && !Auth::user()->is_admin) {
+        if (Auth::id() !== $post->user_id && !Auth::user()->role==='admin') {
             return redirect()->route('posts.index')->with('error', 'Unauthorized action.');
         }
 
@@ -149,18 +160,18 @@ class PostController extends Controller
 
         $post->update($request->all());
 
-        return redirect()->route('posts.index')->with('success', 'Post updated successfully.');
+        return redirect()->route('posts.index')->with('success', 'Cập nhật bài viết thành công.');
     }
 
     public function destroy(Post $post)
     {
-        if (Auth::id() !== $post->user_id && !Auth::user()->is_admin) {
+        if (Auth::id() !== $post->user_id && !Auth::user()->role=== 'admin') {
             return redirect()->route('posts.index')->with('error', 'Unauthorized action.');
         }
 
         $post->delete();
 
-        return redirect()->route('posts.index')->with('success', 'Post deleted successfully.');
+        return redirect()->route('posts.index')->with('success', 'Xoá bài viết thành công.');
     }
     public function allPosts(Request $request)
     {

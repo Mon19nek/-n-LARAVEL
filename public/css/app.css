@@ -165,16 +165,7 @@ select {
     box-sizing: border-box;
 }
 
-button[type="submit"] {
-    width: 100%;
-    padding: 12px;
-    background-color: #52b3a8;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
+
 
 button[type="submit"]:hover {
     background-color: #449081;
@@ -293,4 +284,66 @@ button[type="submit"]:hover {
 .btn-danger {
     background-color: #ff5a5f;
     color: #fff;
+}
+.h-400{
+    height: 400px;
+}
+/* Custom styles for My Account page */
+
+.card {
+    margin-top: 20px;
+}
+
+.card-header {
+    background-color: #007bff;
+    color: #fff;
+    font-weight: bold;
+}
+
+.card-body {
+    font-size: 16px;
+}
+
+.user-info {
+    margin-bottom: 15px;
+}
+
+.user-info strong {
+    font-weight: bold;
+}
+
+.user-info span {
+    color: #6c757d;
+}
+
+.role {
+    font-style: italic;
+    color: #28a745;
+}
+
+.action-btn {
+    margin-top: 20px;
+}
+
+.action-btn a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.action-btn a:hover {
+    text-decoration: underline;
+}
+.w-15{
+    width: 15%;
+}.w-85{
+    width: 85%;
+}
+.page-link{
+    border: none;
+}
+.h-150{
+    height: 150px;
+}
+.contact-image{
+    max-width: 100%;
 }

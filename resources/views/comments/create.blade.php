@@ -2,11 +2,11 @@
 
 @section('content')
 <div >
-    <h1>Create Comment</h1>
+    <h1>Bình luận:</h1>
     <form action="{{ route('comments.store') }}" method="POST">
         @csrf
         <div>
-            <label for="post_id">Post:</label>
+            <label for="post_id">Bài viết:</label>
             <select name="post_id" id="post_id" required>
                 @foreach($posts as $post)
                     <option value="{{ $post->id }}">{{ $post->title }}</option>
@@ -14,10 +14,10 @@
             </select>
         </div>
         <div>
-            <label for="content">Content:</label>
+            <label for="content">Nội dung:</label>
             <textarea name="content" id="content" required></textarea>
         </div>
-        <button type="submit">Create</button>
+        <button type="submit">Bình luận</button>
     </form>
 </div>
 @endsection

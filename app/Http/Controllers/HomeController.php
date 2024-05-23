@@ -13,10 +13,6 @@ class HomeController extends Controller
      *
      * @return void
      */
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
 
     /**
      * Show the application dashboard.
@@ -26,14 +22,14 @@ class HomeController extends Controller
     public function index()
     {
         // Logic to retrieve all posts
-        $posts = Post::paginate(10); // Retrieve all posts, paginated
+        $posts = Post::orderBy('created_at', 'desc')->paginate(10); // Retrieve all posts, paginated
         $categories = Category::all();
         $breadcrumbs = [];
 
         // Other necessary logic (e.g., fetching categories, setting breadcrumbs)
 
         return view('home', compact('posts', 'categories', 'breadcrumbs'));
-    
+
     }
 
 }
